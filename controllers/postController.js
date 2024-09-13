@@ -15,7 +15,13 @@ exports.createPost = async (req, res) => {
 // Get All Posts
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.find().populate("author", "username email");
+    const posts = await Post.find()
+      .populate("author", "username email")
+      .populate({
+        path: "comments",
+        populate: { path: "author", select: "username email" },
+      });
+
     res.json(posts);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -25,10 +31,13 @@ exports.getAllPosts = async (req, res) => {
 // Get Single Post
 exports.getSinglePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id).populate(
-      "author",
-      "username email"
-    );
+    const post = await Post.findById(req.params.id)
+      .populate("author", "username email")
+      .populate({
+        path: "comments",
+        populate: { path: "author", select: "username email" },
+      });
+
     if (!post) return res.status(404).json({ message: "Post not found" });
     res.json(post);
   } catch (err) {

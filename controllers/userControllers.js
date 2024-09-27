@@ -37,3 +37,11 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// @desc Logout user
+// route POST /api/users/logout
+// @access Public
+const logoutUser = async (req, res) => {
+  res.clearCookie("jwt");
+  res.status(200).json({ message: "Log Out SucccessFully", status: true });
+};

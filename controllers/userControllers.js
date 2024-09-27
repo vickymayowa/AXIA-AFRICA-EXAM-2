@@ -41,7 +41,23 @@ exports.loginUser = async (req, res) => {
 // @desc Logout user
 // route POST /api/users/logout
 // @access Public
-const logoutUser = async (req, res) => {
+exports.logoutUser = async (req, res) => {
   res.clearCookie("jwt");
   res.status(200).json({ message: "Log Out SucccessFully", status: true });
+};
+
+// Delete User
+exports.deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    await User.findByIdAndDelete(userId);
+
+    // Clear the cookie
+    res.clearCookie("token");
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };

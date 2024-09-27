@@ -1,5 +1,6 @@
 const express = require("express");
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 // Redirect to Google login
@@ -21,6 +22,7 @@ router.get(
       expiresIn: "1h",
     });
     res.cookie("token", token, { httpOnly: true });
+    res.redirect("/dashboard");
   }
 );
 
